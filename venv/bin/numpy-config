@@ -1,4 +1,4 @@
-#!/Users/vandanaande/voice-meet-ai/venv/bin/python3
+#!/Users/vandanaande/voice-meet-ai/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys

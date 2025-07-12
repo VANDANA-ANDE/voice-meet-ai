@@ -4,28 +4,16 @@ from io import BytesIO
 def export_to_pdf(transcript, summary):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_font("Arial", size=12)
 
-    pdf.set_font("Arial", "B", 16)
-    pdf.cell(0, 10, "Meeting Transcript & Summary", ln=True, align="C")
-    pdf.ln(10)
+    pdf.multi_cell(0, 10, "Transcript:\n" + transcript)
+    pdf.ln()
+    pdf.multi_cell(0, 10, "Summary:\n" + summary)
 
-    # Transcript Section
-    pdf.set_font("Arial", "B", 14)
-    pdf.cell(0, 10, "Transcript", ln=True)
-    pdf.set_font("Arial", "", 12)
-    pdf.multi_cell(0, 10, transcript)
-    pdf.ln(5)
-
-    # Summary Section
-    pdf.set_font("Arial", "B", 14)
-    pdf.cell(0, 10, "Summary", ln=True)
-    pdf.set_font("Arial", "", 12)
-    pdf.multi_cell(0, 10, summary)
-
-    # Save to memory
+    # Get PDF as bytes
     pdf_output = BytesIO()
-    pdf.output(pdf_output)
-    pdf_output.seek(0)
+    pdf_bytes = pdf.output(dest='S').encode('latin-1')  # Get string, encode as bytes
+    pdf_output.write(pdf_bytes)
+    pdf_output.seek(0)  # Rewind the buffer
 
     return pdf_output

@@ -1,26 +1,30 @@
-import openai
+import requests
+import streamlit as st
 
-def generate_summary(transcript, openai_key):
-    openai.api_key = openai_key
+API_TOKEN = st.secrets["HUGGINGFACE_API_TOKEN"]
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
-    prompt = (
-        "You are an AI assistant. Summarize the following meeting transcript in a clear and concise way:\n\n"
-        f"{transcript}\n\nSummary:"
-    )
+def generate_summary(transcript):  # underscore for unused param
+    if not transcript.strip():
+        return "Transcript is empty. Please transcribe audio first."
+
+    payload = {
+        "inputs": f"summarize: {transcript}",
+        "parameters": {"max_length": 150, "do_sample": False},
+    }
 
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful meeting summarizer."},
-                {"role": "user", "content": prompt}
-            ],
-            max_tokens=300,
-            temperature=0.5,
-        )
+        response = requests.post(API_URL, headers=headers, json=payload)
+        response.raise_for_status()
+        result = response.json()
+        
 
-        summary = response["choices"][0]["message"]["content"].strip()
-        return summary
+        if isinstance(result, list) and "summary_text" in result[0]:
+            return result[0]["summary_text"]
+        
+        else:
+            return "Unexpected response format from Hugging Face API."
 
     except Exception as e:
-        return f"OpenAI API error: {e}"
+        return f"Hugging Face API error: {e}"
