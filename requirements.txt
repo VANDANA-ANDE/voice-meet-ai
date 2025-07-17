@@ -2,3 +2,5 @@ streamlit
 openai
 azure-cognitiveservices-speech
 fpdf
+pydub
+python-dotenv
