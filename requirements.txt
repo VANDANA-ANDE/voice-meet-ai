@@ -4,3 +4,4 @@ azure-cognitiveservices-speech
 fpdf
 pydub
 python-dotenv
+pyaudio
