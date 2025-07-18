@@ -1,7 +1,4 @@
 streamlit
-openai
 azure-cognitiveservices-speech
 fpdf
-pydub==0.25.1
 python-dotenv
-pyaudio

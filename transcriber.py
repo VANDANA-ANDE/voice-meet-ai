@@ -1,24 +1,28 @@
 import azure.cognitiveservices.speech as speechsdk
 import tempfile
 import os
-from pydub import AudioSegment
+import wave
+import io
+
+def get_audio_duration_wav(file_bytes):
+    with wave.open(io.BytesIO(file_bytes), 'rb') as wav_file:
+        frames = wav_file.getnframes()
+        rate = wav_file.getframerate()
+        duration = frames / float(rate)
+        return duration
 
 def transcribe_audio(uploaded_file, speech_key, service_region):
     try:
-        # Step 1: Save uploaded file to temp file
+        # Step 1: Ensure WAV format only
         suffix = os.path.splitext(uploaded_file.name)[1].lower()
-        with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_audio:
-            temp_audio.write(uploaded_file.read())
-            temp_audio_path = temp_audio.name
-
-        # Step 2: Convert to WAV if not already WAV
         if suffix != ".wav":
-            wav_path = temp_audio_path + ".wav"
-            audio = AudioSegment.from_file(temp_audio_path)
-            audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
-            audio.export(wav_path, format="wav")
-            os.remove(temp_audio_path)  # remove original temp file
-            temp_audio_path = wav_path
+            return "Only WAV files are supported. Please upload a .wav file."
+
+        # Step 2: Save uploaded file to temp location
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio:
+            audio_bytes = uploaded_file.read()
+            temp_audio.write(audio_bytes)
+            temp_audio_path = temp_audio.name
 
         # Step 3: Configure Azure speech
         speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
