@@ -1,5 +1,5 @@
-azure_storage==0.37.0
-fpdf==1.7.2
-Requests==2.32.4
-streamlit==1.44.1
-streamlit==1.46.1
+streamlit
+azure-cognitiveservices-speech
+requests
+fpdf
+python-dotenv
