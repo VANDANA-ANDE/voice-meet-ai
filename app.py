@@ -3,8 +3,8 @@ from transcriber import transcribe_audio
 from summarizer import generate_summary
 from pdf_export import export_to_pdf
 
-st.set_page_config(page_title="AI Voice Notes Transcriber", page_icon="🎙️", layout="wide")
-st.title("🎙️ AI Voice Notes Transcriber")
+st.set_page_config(page_title="Voitex", page_icon="🎙️", layout="wide")
+st.title("🎙️ Voitex")
 st.write("Upload your audio file below:")
 
 # Upload audio
